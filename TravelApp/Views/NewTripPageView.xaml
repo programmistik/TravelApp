@@ -1,0 +1,244 @@
+﻿<UserControl x:Class="TravelApp.Views.NewTripPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TravelApp.Views"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             Name="This"            
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ListBoxItemTemplate">
+            <StackPanel>
+
+                <Grid  HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
+                        <Image Source="{Binding City.ImageUri}"
+                            Width="350"/>
+                        <Label FontWeight="Bold"
+                               Background="Black"
+                               Foreground="White"
+                               Width="350"
+                               Content="{Binding City.CityName}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <Button   
+                            Margin="1"
+                    Command="{Binding DataContext.DeleteCommand, ElementName=This}"
+                    CommandParameter="{Binding}">
+                            Delete
+                        </Button>
+
+                        <Button   
+                            Margin="1" 
+                    Command="{Binding DataContext.ShowCommand, ElementName=This}"
+                    CommandParameter="{Binding}">
+                            Info
+                        </Button>
+                        <Button   
+                            Margin="1" 
+                    Command="{Binding DataContext.ShowMapCommand, ElementName=This}"
+                    CommandParameter="{Binding}">
+                            Map
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </DataTemplate>
+
+
+        <DataTemplate x:Key="ListBoxTicketItemTemplate">
+            <StackPanel>
+
+                <Grid  HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
+
+                        <Label FontWeight="Bold"
+                               Content="{Binding TicketName}" />
+                    </StackPanel>
+
+
+                    <Button  Grid.Column="1" 
+                            Margin="1"
+                            Command="{Binding DataContext.DeleteTicketCommand, ElementName=This}"
+                            CommandParameter="{Binding}">
+                        Delete
+                    </Button>
+
+                    <Button Grid.Column="2"  
+                            Margin="1" 
+                            Command="{Binding DataContext.ShowTicketCommand, ElementName=This}"
+                            CommandParameter="{Binding}">
+                        Show
+                    </Button>
+
+
+                </Grid>
+
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+
+
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="OK"
+                    Margin="5,5,5,10"
+                    Width="100"
+                    FontSize="15"
+                    Command="{Binding OkCommand}"/>
+            <Button Content="Back"
+                    Margin="5,5,5,10"
+                    Width="100"
+                    FontSize="15"
+                    Command="{Binding BackCommand}"/>
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="721*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="2,2,0,0"                  
+               Text="Name:"
+               FontSize="15"/>
+            <TextBox Grid.Column="1" Name="tbName" Margin="2"
+                 FontSize="15"
+                 Text="{Binding TripName}" Grid.ColumnSpan="2"></TextBox>
+        </Grid>
+        <StackPanel HorizontalAlignment="Stretch" 
+                    Orientation="Horizontal"
+                    Margin="2">
+            <Label  Margin="2,2,2,20"
+               Content="Departure date:"
+               FontSize="15"/>
+            <DatePicker Name="datePicker1" 
+                    Width="200"
+                    Margin="2,2,2,20"
+                    IsDropDownOpen="False" 
+                    SelectedDateFormat="Short" 
+                    SelectedDate="{Binding Path=DepartureDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+            <Label  Margin="2"
+               Content="Arrival date:"
+               FontSize="15"/>
+            <DatePicker Name="datePicker2" 
+                    Width="200"
+                    Margin="2,2,2,20"
+                    IsDropDownOpen="False" 
+                    SelectedDateFormat="Short" 
+                    SelectedDate="{Binding Path=ArrivalDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+        </StackPanel>
+        <TabControl x:Name="info">
+            <TabItem x:Name="citiesTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3">Cities</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBox Name="tbCity"
+                                 Margin="2"
+                                 FontSize="15"
+                                 Text="{Binding CityToSearch}"/>
+                            <Button Name="btnAddCity"
+                                Margin="2"
+                                Command="{Binding AddCityCommand}"
+                                Content="Add city"/>
+                            <ListBox HorizontalContentAlignment="Stretch" 
+                            ItemsSource="{Binding CityCollection}"                   
+                            Margin="3"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Visible"
+                            Name="lbCityList"          
+                            Width="430"
+                            Height="240"         
+                            ItemTemplate="{StaticResource ListBoxItemTemplate}">
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+
+                            </ListBox>
+
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem x:Name="ticketsTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3">Tickets</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <ListBox HorizontalContentAlignment="Stretch" 
+                            ItemsSource="{Binding TicketList}"                   
+                            Margin="3"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Visible"
+                            Name="lbTicketList"          
+                            Width="430"
+                            Height="280"         
+                            ItemTemplate="{StaticResource ListBoxTicketItemTemplate}">
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+
+                            </ListBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Add new ticket"
+                                   Margin="10"
+                                   FontSize="15"
+                                   FontWeight="Bold"/>
+                            <Label Content="Name:"
+                                   Margin="10,0,0,0"/>
+                            <TextBox Name="tbTicketName" Margin="10,0,0,0"
+                                    FontSize="15"
+                                    Text="{Binding TicketName}"
+                                     Width="300"/>
+                            <Button Content="Add"
+                                    Command="{Binding AddNewTicketCommand}"
+                                    Height="25"
+                                    Width="100"
+                                    Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem x:Name="checkListTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3">CheckList</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="TravelApp.Views.MainPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TravelApp.Views"
+             mc:Ignorable="d" 
+             Name="MainWin"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ListBoxItemTemplate">
+            <StackPanel>
+
+                <Grid  HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
+
+                        <Label FontWeight="Bold"
+                               Content="{Binding TripName}" />
+                    </StackPanel>
+
+
+                    <Button  Grid.Column="1" 
+                            Margin="1"
+                            Command="{Binding DataContext.DeleteTripCommand, ElementName=MainWin}"
+                            CommandParameter="{Binding}">
+                        Delete
+                    </Button>
+
+                    <Button Grid.Column="2"  
+                            Margin="1" 
+                            Command="{Binding DataContext.ShowEditTripCommand, ElementName=MainWin}"
+                            CommandParameter="{Binding}">
+                        Show
+                    </Button>
+
+
+                </Grid>
+
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Content="➕ Add new trip"
+                    Margin="0,20,20,20" 
+                    Height="40"
+                    Width="180"
+                    FontSize="15"
+                    Command="{Binding AddNewTrip}"/>
+
+        <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding TripList}"
+                 ItemTemplate="{StaticResource ListBoxItemTemplate}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">       
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </Grid>
+</UserControl>

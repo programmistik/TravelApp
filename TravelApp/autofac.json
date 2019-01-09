@@ -1,0 +1,59 @@
+{
+  "defaultAssembly": "TravelApp",
+  "components": [
+    { "type": "TravelApp.ViewModels.AppViewModel" },
+    { "type": "TravelApp.ViewModels.LogInPageViewModel" },
+    { "type": "TravelApp.ViewModels.SignUpPageViewModel" },
+    { "type": "TravelApp.ViewModels.MainPageViewModel" },
+    { "type": "TravelApp.ViewModels.NewTripPageViewModel" },
+    { "type": "TravelApp.ViewModels.ShowPdfPageViewModel" },
+    { "type": "TravelApp.ViewModels.ShowMapPageViewModel" },
+    {
+      "type": "TravelApp.Models.AppDbContext",
+      "instanceScope": "single-instance"
+    },
+
+    {
+      "type": "TravelApp.Services.MessageService",
+      "services": [
+        {
+          "type": "TravelApp.Services.IMessageService"
+        }
+      ]
+    },
+    {
+      "type": "TravelApp.Views.SignUpPageView",
+      "services": [
+        {
+          "type": "TravelApp.Services.IPasswordSupplier"
+        }
+      ],
+      "instanceScope": "single-instance"
+    },
+    {
+      "type": "TravelApp.Services.DefaultDialogService",
+      "services": [
+        {
+          "type": "TravelApp.Services.IDialogService"
+        }
+      ]
+    },
+    {
+      "type": "TravelApp.Services.APIService",
+      "services": [
+        {
+          "type": "TravelApp.Services.IAPIService"
+        }
+      ]
+    },
+    {
+      "type": "TravelApp.Services.NavigationService",
+      "services": [
+        {
+          "type": "TravelApp.Services.INavigationService"
+        }
+      ],
+      "instanceScope": "single-instance"
+    }
+  ]
+}

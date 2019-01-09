@@ -13,5 +13,13 @@ namespace TravelApp
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var locator = new ViewModelLocator();
+
+            var window = new AppWindow();
+            window.DataContext = locator.GetAppViewModel();
+            window.ShowDialog();
+        }
     }
 }
