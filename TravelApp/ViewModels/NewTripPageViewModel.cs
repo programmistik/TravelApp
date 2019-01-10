@@ -40,6 +40,17 @@ namespace TravelApp.ViewModels
         private Trip currentTrip;
         public Trip CurrentTrip { get => currentTrip; set => Set(ref currentTrip, value); }
 
+        private string cityName;
+        public string CityName { get => cityName; set => Set(ref cityName, value); }
+        private string country;
+        public string Country { get => country; set => Set(ref country, value); }
+        private string currency;
+        public string Currency { get => currency; set => Set(ref currency, value); }
+        private string timeZone;
+        public string TimeZone { get => timeZone; set => Set(ref timeZone, value); }
+        private string mayor;
+        public string Mayor { get => mayor; set => Set(ref mayor, value); }
+
         private bool AddNew { get; set; }
 
         
@@ -215,6 +226,11 @@ namespace TravelApp.ViewModels
                 param =>
                 {
                     var city = param.City;
+                    CityName = city.CityName;
+                    Country = "Country: " + city.CountryName + " (" + city.CountryCode + ")";
+                    Currency = "Currency: " + city.Currency;
+                    TimeZone = "Time zone: " + city.TimeZoneShortName + " (" + city.TimeZone + ")";
+                    Mayor = "Mayor: " + city.Mayor;
                 }
             ));
         }
@@ -227,6 +243,19 @@ namespace TravelApp.ViewModels
                     var city = param.City;
                     Messenger.Default.Send(city);
                     navigationService.Navigate<ShowMapPageView>();
+                }
+            ));
+        }
+
+        private RelayCommand<CityList> showGoogleMapCommand;
+        public RelayCommand<CityList> ShowGoogleMapCommand
+        {
+            get => showGoogleMapCommand ?? (showGoogleMapCommand = new RelayCommand<CityList>(
+                param =>
+                {
+                    var city = param.City;
+                    Messenger.Default.Send(new NotificationMessage<City>(city, "SendCityToGoogle"));
+                    navigationService.Navigate<ShowGoogleMapPageView>();
                 }
             ));
         }

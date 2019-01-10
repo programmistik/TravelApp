@@ -25,6 +25,7 @@ namespace TravelApp
         private NewTripPageViewModel NewTripViewModel;
         private ShowPdfPageViewModel ShowPdfViewModel;
         private ShowMapPageViewModel ShowMapViewModel;
+        private ShowGoogleMapPageViewModel ShowGoogleMapViewModel;
 
         private INavigationService navigationService;
 
@@ -50,6 +51,7 @@ namespace TravelApp
                 NewTripViewModel = Container.Resolve<NewTripPageViewModel>();
                 ShowPdfViewModel = Container.Resolve<ShowPdfPageViewModel>();
                 ShowMapViewModel = Container.Resolve<ShowMapPageViewModel>();
+                ShowGoogleMapViewModel = Container.Resolve<ShowGoogleMapPageViewModel>();
 
                 navigationService.Register<LogInPageView>(LogInViewModel);
                 navigationService.Register<SignUpPageView>(SignUpViewModel);
@@ -57,6 +59,7 @@ namespace TravelApp
                 navigationService.Register<NewTripPageView>(NewTripViewModel);
                 navigationService.Register<ShowPdfPageView>(ShowPdfViewModel);
                 navigationService.Register<ShowMapPageView>(ShowMapViewModel);
+                navigationService.Register<ShowGoogleMapPageView>(ShowGoogleMapViewModel);
 
                 navigationService.Navigate<LogInPageView>();
             }

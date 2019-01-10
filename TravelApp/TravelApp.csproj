@@ -214,12 +214,16 @@
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModelLocator.cs" />
+    <Compile Include="ViewModels\ShowGoogleMapPageViewModel.cs" />
     <Compile Include="ViewModels\LogInPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\NewTripPageViewModel.cs" />
     <Compile Include="ViewModels\ShowMapPageViewModel.cs" />
     <Compile Include="ViewModels\ShowPdfPageViewModel.cs" />
     <Compile Include="ViewModels\SignUpPageViewModel.cs" />
+    <Compile Include="Views\ShowGoogleMapPageView.xaml.cs">
+      <DependentUpon>ShowGoogleMapPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LogInPageView.xaml.cs">
       <DependentUpon>LogInPageView.xaml</DependentUpon>
     </Compile>
@@ -255,6 +259,10 @@
       <DependentUpon>AppWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ShowGoogleMapPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LogInPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -322,7 +330,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="MyMap.html" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>

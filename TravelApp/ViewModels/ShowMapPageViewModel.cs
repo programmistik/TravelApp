@@ -15,11 +15,6 @@ using TravelApp.Views;
 
 namespace TravelApp.ViewModels
 {
-    //public class MapLocation
-    //{
-    //    public Location Location { get; set; }
-    //    public string Name { get; set; }
-    //}
 
     public class ShowMapPageViewModel : ViewModelBase
     {
@@ -29,7 +24,6 @@ namespace TravelApp.ViewModels
         private string pageTitle;
         public string PageTitle { get => pageTitle; set => Set(ref pageTitle, value); }
 
-      //  public ObservableCollection<MapLocation> Locations { get; private set; }
 
         private readonly INavigationService navigation;
 

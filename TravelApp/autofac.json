@@ -8,6 +8,7 @@
     { "type": "TravelApp.ViewModels.NewTripPageViewModel" },
     { "type": "TravelApp.ViewModels.ShowPdfPageViewModel" },
     { "type": "TravelApp.ViewModels.ShowMapPageViewModel" },
+    { "type": "TravelApp.ViewModels.ShowGoogleMapPageViewModel" },
     {
       "type": "TravelApp.Models.AppDbContext",
       "instanceScope": "single-instance"

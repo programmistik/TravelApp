@@ -1,0 +1,94 @@
+﻿<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html, body {
+          height: 99.2%;
+          margin: 0;
+          padding: 0;
+        }
+
+        #map_canvas {
+          height: 100%;
+          border-color:black;
+          border-style:groove;
+          border-width:2px;
+        }
+
+        #content
+        {
+          width: 270px;
+          background-color:aliceblue;
+          color:white;
+        }
+    </style>
+<script type="text/javascript" src="http://maps.google.com.mx/maps/api/js?sensor=true&language=us"></script>
+<script type="text/javascript">
+    var map;
+    var markers = [];
+    function initialize() {
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            {
+                zoom: 15,
+                center: new google.maps.LatLng([origin]),
+                mapTypeId: google.maps.MapTypeId.roadmap,
+                disableDefaultUI: true,
+                zoomControl: true,
+                maxZoom: 19
+            });
+    }
+
+    function addMarker(Lat, Long, Client, Image, Direction) {
+        var latLng = new google.maps.LatLng(Lat, Long);
+        var contentString = '<div id="content">' +
+            '<h1>' + Client + '</h1>' +
+            '<img src="' + Image + '" widht="350" style="margin: 0 auto; display:block"/>' +
+            '<br/><br/>' + Direction +
+            '</div>';
+        var infowindow = new google.maps.InfoWindow({ content: contentString });
+
+        marker = new google.maps.Marker
+            ({
+                position: latLng,
+                icon: 'down2.png',
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                title: "Click for show the data of the client"
+            });
+        markers.push(marker);
+        marker.setMap(map);
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(map, marker);
+            if (marker.getAnimation() != null) {
+                marker.setAnimation(null);
+            }
+            else {
+                marker.setAnimation(google.maps.Animation.DROP);
+            }
+        });
+        //add the Drag end event to send the dragEvent to cs
+        google.maps.event.addListener(marker, 'dragend', function () {
+            eventEndDragMarker(marker)
+        });
+    }
+
+
+    function eventEndDragMarker(shape) {
+        var pos = new google.maps.LatLng;
+        pos = shape.getPosition();
+        endDragMarkerCS(pos.lat(), pos.lng());
+    }
+
+    function endDragMarkerCS(lat, long) {
+        window.external.endDragMarkerCS(lat, long);
+    }
+</script>
+  
+</head>
+<body onload="initialize()">
+  <div id="map_canvas"></div>
+</body>
+</html> 
