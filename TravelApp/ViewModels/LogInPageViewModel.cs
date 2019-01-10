@@ -88,10 +88,11 @@ namespace TravelApp.ViewModels
                                 string hashToCompare = Convert.ToBase64String(hash);
                                 if (hashValueFromDB.Equals(hashToCompare))
                                 {
+                                    var Usr = qwr.Single();
                                     // messageService.ShowInfo("OK");
-                                    var Usr = new SendCurrentUser();
-                                    Usr.UserId = qwr.Single().Id;
-                                    Messenger.Default.Send<SendCurrentUser>(Usr);
+                                    //var Usr = new SendCurrentUser();
+                                    //Usr.UserId = qwr.Single().Id;
+                                    Messenger.Default.Send(new NotificationMessage<User>(Usr,"SendCurrentUser"));
                                     navigationService.Navigate<MainPageView>();
                                 }
                                 else

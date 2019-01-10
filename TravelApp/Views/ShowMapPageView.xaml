@@ -18,9 +18,12 @@
                 Margin="5"
                 Command="{Binding BackCommand}"/>
         <m:Map Grid.Row="1"
-               ZoomLevel="15"
-               Center="{Binding LatLon}"  
-               
-               CredentialsProvider="AmM-i4UfnrFgxZ0QY5WDgCd1erQCBbFT2j-I08lf_wtIRsP92cYBb5mt4P2gDbEj"></m:Map>
+               ZoomLevel="12"
+               Name="myMap"
+               Center="{Binding LatLon}"
+               CredentialsProvider="AmM-i4UfnrFgxZ0QY5WDgCd1erQCBbFT2j-I08lf_wtIRsP92cYBb5mt4P2gDbEj">
+        
+            <m:Pushpin m:MapLayer.Position="{Binding LatLon}"/>
+        </m:Map>
     </Grid>
 </UserControl>

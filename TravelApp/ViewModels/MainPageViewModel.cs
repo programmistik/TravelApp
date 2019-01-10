@@ -33,21 +33,24 @@ namespace TravelApp.ViewModels
             this.db = db;
             this.messageService = messageService;
 
-            Messenger.Default.Register<SendCurrentUser>(this, usr => 
-            {
-                CurrentUserId = usr.UserId;
-                TripList = new ObservableCollection<Trip>(db.Trips.Where(tr => tr.UserId == usr.UserId));
-            });
-            TripList = new ObservableCollection<Trip>(db.Trips.Where(tr => tr.UserId == CurrentUserId));
+            Messenger.Default.Register<NotificationMessage<User>>(this, OnHitIt);
 
-            Messenger.Default.Register<AddToCollection>(this, a =>
+
+            Messenger.Default.Register<NotificationMessage<Trip>>(this, a =>
             {
-                if (a.Add)
-                    TripList = new ObservableCollection<Trip>(db.Trips.Where(tr => tr.UserId == CurrentUserId));
+                if (a.Notification == "AddNewTripToCollection")
+                    TripList.Add(a.Content);
             });
         }
 
-        
+        private void OnHitIt(NotificationMessage<User> usr)
+        {
+            if (usr.Notification == "SendCurrentUser")
+            {
+                CurrentUserId = usr.Content.Id;
+                TripList = new ObservableCollection<Trip>(db.Trips.Where(tr => tr.UserId == CurrentUserId));
+            }
+        }
 
         private RelayCommand addNewTrip;
         public RelayCommand AddNewTrip
@@ -56,18 +59,40 @@ namespace TravelApp.ViewModels
                 () =>
                 {
                     var NewTrip = new Trip();
-                    NewTrip.DepartureDate = DateTime.Now;
-                    NewTrip.ArrivalDate = DateTime.Now;
-                    NewTrip.CityList = new ObservableCollection<CityList>();
-                    NewTrip.Tickets = new ObservableCollection<Ticket>();
+                    
                     NewTrip.UserId = CurrentUserId;
-                   // NewTrip.User = db.Users.Single(u => u.Id == CurrentUserId);
-                    Messenger.Default.Send(NewTrip);
+                    NewTrip.User = db.Users.Single(u => u.Id == CurrentUserId);
+                    Messenger.Default.Send(new NotificationMessage<Trip>(NewTrip, "NewTrip"));
                     navigationService.Navigate<NewTripPageView>();
                 }
             ));
         }
 
+        private RelayCommand<Trip> deleteTripCommand;
+        public RelayCommand<Trip> DeleteTripCommand
+        {
+            get => deleteTripCommand ?? (deleteTripCommand = new RelayCommand<Trip>(
+                param =>
+                {
+                   // TripList.Remove(param);
+                    db.Trips.Remove(param);
+                   
+                    db.SaveChanges();
+                }
+            ));
+        }
+
+        private RelayCommand<Trip> showEditTripCommand;
+        public RelayCommand<Trip> ShowEditTripCommand
+        {
+            get => showEditTripCommand ?? (showEditTripCommand = new RelayCommand<Trip>(
+                param =>
+                {
+                    Messenger.Default.Send(new NotificationMessage<Trip>(param, "EditTrip"));
+                    navigationService.Navigate<NewTripPageView>();
+                }
+            ));
+        }
 
     }
 }

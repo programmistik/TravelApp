@@ -18,7 +18,7 @@
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="0.2*" />
                     </Grid.ColumnDefinitions>
-
+                   
                     <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
 
                         <Label FontWeight="Bold"
@@ -39,7 +39,7 @@
                             CommandParameter="{Binding}">
                         Show
                     </Button>
-
+                   
 
                 </Grid>
 
@@ -61,6 +61,7 @@
                     Command="{Binding AddNewTrip}"/>
 
         <ListBox Grid.Row="1" 
+                 Margin="5"
                  ItemsSource="{Binding TripList}"
                  ItemTemplate="{StaticResource ListBoxItemTemplate}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">       

@@ -40,6 +40,8 @@ namespace TravelApp.ViewModels
         private Trip currentTrip;
         public Trip CurrentTrip { get => currentTrip; set => Set(ref currentTrip, value); }
 
+        private bool AddNew { get; set; }
+
         
         private readonly IAPIService apiService;
         private readonly INavigationService navigationService;
@@ -60,15 +62,43 @@ namespace TravelApp.ViewModels
             this.messageService = messageService;
             this.dialogService = dialogService;
             this.db = db;
-            Messenger.Default.Register<Trip>(this, tr =>
+
+            Messenger.Default.Register<NotificationMessage<Trip>>(this, OnHitIt);
+
+            //Messenger.Default.Register<Trip>(this, tr =>
+            //{
+            //    CurrentTrip = tr;
+            //    TripName = tr.TripName;
+            //    DepartureDate = tr.DepartureDate;
+            //    ArrivalDate = tr.ArrivalDate;
+            //    CityCollection = new ObservableCollection<CityList>(tr.CityList);
+            //    TicketList = new ObservableCollection<Ticket>(tr.Tickets);
+            //});
+        }
+
+        private void OnHitIt(NotificationMessage<Trip> ntr)
+        {
+            if (ntr.Notification == "NewTrip")
             {
+                AddNew = true;
+                var tr = ntr.Content;
+                CurrentTrip = tr;
+                DepartureDate = DateTime.Now;
+                ArrivalDate = DateTime.Now;
+                CityCollection = new ObservableCollection<CityList>();
+                TicketList = new ObservableCollection<Ticket>();
+            }
+            else if (ntr.Notification == "EditTrip")
+            {
+                AddNew = false;
+                var tr = ntr.Content;
                 CurrentTrip = tr;
                 TripName = tr.TripName;
                 DepartureDate = tr.DepartureDate;
                 ArrivalDate = tr.ArrivalDate;
                 CityCollection = new ObservableCollection<CityList>(tr.CityList);
                 TicketList = new ObservableCollection<Ticket>(tr.Tickets);
-            });
+            }
         }
 
         private RelayCommand addCityCommand;
@@ -173,8 +203,6 @@ namespace TravelApp.ViewModels
                 {
                     if (messageService.ShowYesNo("Are you sure?"))
                     {
-                        //db.Contacts.Remove(param);
-                        //db.SaveChanges();
                         CityCollection.Remove(param);
                     }
                 }
@@ -210,27 +238,38 @@ namespace TravelApp.ViewModels
                 () =>
                 {
                     // save all in db
-                    
+                    CurrentTrip.TripName = TripName;
                     CurrentTrip.ArrivalDate = ArrivalDate;
                     CurrentTrip.DepartureDate = DepartureDate;
                     CurrentTrip.CityList = new ObservableCollection<CityList>(CityCollection);
                     CurrentTrip.Tickets = new ObservableCollection<Ticket>(TicketList);
-                    if (string.IsNullOrEmpty(CurrentTrip.TripName))
-                    {
-                        CurrentTrip.TripName = TripName;
+                    if (AddNew)
+                    {                        
                         db.Trips.Add(CurrentTrip);
-                        //db.SaveChanges();
-                        
+                        db.SaveChanges();
+                        Messenger.Default.Send(new NotificationMessage<Trip>(CurrentTrip, "AddNewTripToCollection"));
                     }
                     else
-                        CurrentTrip.TripName = TripName;
-
-                    db.SaveChanges();
-                    Messenger.Default.Send(new AddToCollection(true, CurrentTrip));
+                    {
+                        db.SaveChanges();
+                    }
                     navigationService.Navigate<MainPageView>();
                 }
             ));
         }
+
+        private RelayCommand backCommand;
+        public RelayCommand BackCommand
+        {
+            get => backCommand ?? (backCommand = new RelayCommand(
+                () =>
+                {
+                    navigationService.Navigate<MainPageView>();
+                }
+            ));
+        }
+
+
 
     }
 }
