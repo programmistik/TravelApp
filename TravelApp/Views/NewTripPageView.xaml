@@ -251,8 +251,27 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="3">CheckList</TextBlock>
+                        
                     </StackPanel>
                 </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Grid.Row="4" DataContext="{Binding ChkCollection}" >
+                        <DataGrid x:Name="chkDataGrid"  AutoGenerateColumns="False" 
+                      EnableRowVirtualization="True" Height="280" 
+                      ItemsSource="{Binding}" Margin="10,0" 
+                      RowDetailsVisibilityMode="VisibleWhenSelected">
+                            <DataGrid.Columns>
+                                
+                                <DataGridCheckBoxColumn x:Name="StatusColumn" Binding="{Binding ItemStatus, UpdateSourceTrigger=PropertyChanged}" Header="Status" Width="SizeToHeader"/>
+                                <DataGridTextColumn x:Name="ItemColumn" Binding="{Binding ItemName, UpdateSourceTrigger=PropertyChanged}" Header="Item name" Width="350"/>
+                                
+                            </DataGrid.Columns>
+                            
+                        </DataGrid>
+
+                    </StackPanel>
+
+                </TabItem.Content>
             </TabItem>
         </TabControl>
     </StackPanel>

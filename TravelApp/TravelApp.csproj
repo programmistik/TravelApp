@@ -183,8 +183,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Messages\AddToCollection.cs" />
-    <Compile Include="Messages\SendCurrentUser.cs" />
     <Compile Include="Migrations\201812261138400_InitialCreate.cs" />
     <Compile Include="Migrations\201812261138400_InitialCreate.Designer.cs">
       <DependentUpon>201812261138400_InitialCreate.cs</DependentUpon>
@@ -347,6 +345,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

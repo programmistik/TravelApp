@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TravelApp.Messages;
 using TravelApp.Models;
 using TravelApp.Services;
 using TravelApp.Views;
@@ -34,11 +33,17 @@ namespace TravelApp.ViewModels
         private ObservableCollection<Ticket> ticketList;
         public ObservableCollection<Ticket> TicketList { get => ticketList; set => Set(ref ticketList, value); }
 
+        private ObservableCollection<CheckItem> chkCollection;
+        public ObservableCollection<CheckItem> ChkCollection { get => chkCollection; set => Set(ref chkCollection, value); }
+
         private string ticketName;
         public string TicketName { get => ticketName; set => Set(ref ticketName, value); }
 
         private Trip currentTrip;
         public Trip CurrentTrip { get => currentTrip; set => Set(ref currentTrip, value); }
+
+        private string pageTitle;
+        public string PageTitle { get => pageTitle; set => Set(ref pageTitle, value); }
 
         private string cityName;
         public string CityName { get => cityName; set => Set(ref cityName, value); }
@@ -66,8 +71,6 @@ namespace TravelApp.ViewModels
                                     IAPIService apiService,
                                     AppDbContext db)
         {
-            //CityList = new ObservableCollection<CityList>();
-            //TicketList = new ObservableCollection<Ticket>();
             this.navigationService = navigationService;
             this.apiService = apiService;
             this.messageService = messageService;
@@ -76,21 +79,13 @@ namespace TravelApp.ViewModels
 
             Messenger.Default.Register<NotificationMessage<Trip>>(this, OnHitIt);
 
-            //Messenger.Default.Register<Trip>(this, tr =>
-            //{
-            //    CurrentTrip = tr;
-            //    TripName = tr.TripName;
-            //    DepartureDate = tr.DepartureDate;
-            //    ArrivalDate = tr.ArrivalDate;
-            //    CityCollection = new ObservableCollection<CityList>(tr.CityList);
-            //    TicketList = new ObservableCollection<Ticket>(tr.Tickets);
-            //});
         }
 
         private void OnHitIt(NotificationMessage<Trip> ntr)
         {
             if (ntr.Notification == "NewTrip")
             {
+                TripName = "";
                 AddNew = true;
                 var tr = ntr.Content;
                 CurrentTrip = tr;
@@ -98,6 +93,8 @@ namespace TravelApp.ViewModels
                 ArrivalDate = DateTime.Now;
                 CityCollection = new ObservableCollection<CityList>();
                 TicketList = new ObservableCollection<Ticket>();
+                ChkCollection = new ObservableCollection<CheckItem>();
+                PageTitle = "New trip";
             }
             else if (ntr.Notification == "EditTrip")
             {
@@ -109,6 +106,8 @@ namespace TravelApp.ViewModels
                 ArrivalDate = tr.ArrivalDate;
                 CityCollection = new ObservableCollection<CityList>(tr.CityList);
                 TicketList = new ObservableCollection<Ticket>(tr.Tickets);
+                ChkCollection = new ObservableCollection<CheckItem>(tr.CheckItems);
+                PageTitle = tr.TripName;
             }
         }
 
@@ -272,6 +271,7 @@ namespace TravelApp.ViewModels
                     CurrentTrip.DepartureDate = DepartureDate;
                     CurrentTrip.CityList = new ObservableCollection<CityList>(CityCollection);
                     CurrentTrip.Tickets = new ObservableCollection<Ticket>(TicketList);
+                    CurrentTrip.CheckItems = new ObservableCollection<CheckItem>(ChkCollection);
                     if (AddNew)
                     {                        
                         db.Trips.Add(CurrentTrip);

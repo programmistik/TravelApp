@@ -18,20 +18,23 @@ namespace TravelApp.ViewModels
         private string mapUri;
         public string MapUri { get => mapUri; set => Set(ref mapUri, value); }
 
+        private string pageTitle;
+        public string PageTitle { get => pageTitle; set => Set(ref pageTitle, value); }
+
         private readonly INavigationService navigation;
 
         public ShowGoogleMapPageViewModel(INavigationService navigation)
         {
             this.navigation = navigation;
             Messenger.Default.Register<NotificationMessage<City>>(this, OnHitIt);
-            //Messenger.Default.Register<string>(this, tickUri => TicketUri = tickUri);
-            //TicketUri = @"G:\TravelApp\TravelApp\map.html";
+            
         }
 
         private void OnHitIt(NotificationMessage<City> cty)
         {
             if (cty.Notification == "SendCityToGoogle")
             {
+                PageTitle = cty.Content.CityName;
                 var MyMapUri = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + "\\MyMap.html";
                 var NewMapUri = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + "\\map1.html";
 

@@ -27,13 +27,16 @@ namespace TravelApp.ViewModels
 
         private readonly INavigationService navigation;
 
-        
+
 
         public ShowMapPageViewModel(INavigationService navigation)
         {
             this.navigation = navigation;
-            Messenger.Default.Register<City>(this, city => LatLon = new Location(Convert.ToDouble(city.Latitude, CultureInfo.InvariantCulture), Convert.ToDouble(city.Longitude, CultureInfo.InvariantCulture)));
-            Messenger.Default.Register<City>(this, city => PageTitle = city.CityName);
+            Messenger.Default.Register<City>(this, city =>
+            {
+                LatLon = new Location(Convert.ToDouble(city.Latitude, CultureInfo.InvariantCulture), Convert.ToDouble(city.Longitude, CultureInfo.InvariantCulture));
+                PageTitle = city.CityName;
+            });
         }
 
         private RelayCommand backCommand;

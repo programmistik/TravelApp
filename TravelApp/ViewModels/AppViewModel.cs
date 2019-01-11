@@ -25,9 +25,10 @@ namespace TravelApp.ViewModels
         {
             this.navigation = navigation;
 
-            Messenger.Default.Register<ViewModelBase>(this, viewModel => CurrentPage = viewModel);
+            //Messenger.Default.Register<ViewModelBase>(this, viewModel => CurrentPage = viewModel);
             Messenger.Default.Register<ViewModelBase>(this, viewModel => 
             {
+                CurrentPage = viewModel;
                 var str = viewModel.ToString();
                 if (viewModel is LogInPageViewModel)
                     ApplicationTitle = "Log in";
@@ -36,10 +37,23 @@ namespace TravelApp.ViewModels
                 else if (viewModel is MainPageViewModel)
                     ApplicationTitle = "Main page";
                 else if (viewModel is NewTripPageViewModel)
-                    ApplicationTitle = "Trip";
+                {
+                    var vm = viewModel as NewTripPageViewModel;
+                    ApplicationTitle = vm.PageTitle;
+                }
                 else if (viewModel is ShowMapPageViewModel)
                 {
                     var vm = viewModel as ShowMapPageViewModel;
+                    ApplicationTitle = vm.PageTitle;
+                }
+                else if (viewModel is ShowGoogleMapPageViewModel)
+                {
+                    var vm = viewModel as ShowGoogleMapPageViewModel;
+                    ApplicationTitle = vm.PageTitle;
+                }
+                else if (viewModel is ShowPdfPageViewModel)
+                {
+                    var vm = viewModel as ShowPdfPageViewModel;
                     ApplicationTitle = vm.PageTitle;
                 }
             }

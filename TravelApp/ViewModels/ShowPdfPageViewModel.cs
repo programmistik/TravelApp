@@ -18,12 +18,15 @@ namespace TravelApp.ViewModels
         private string ticketUri;
         public string TicketUri { get => ticketUri; set => Set(ref ticketUri, value); }
 
+        private string pageTitle;
+        public string PageTitle { get => pageTitle; set => Set(ref pageTitle, value); }
+
         private readonly INavigationService navigation;
 
         public ShowPdfPageViewModel(INavigationService navigation)
         {
             this.navigation = navigation;
-            Messenger.Default.Register<string>(this, tickUri => TicketUri = tickUri);
+            Messenger.Default.Register<string>(this, tickUri => { TicketUri = tickUri; PageTitle = "Ticket"; });
         }
 
         private RelayCommand backCommand;
