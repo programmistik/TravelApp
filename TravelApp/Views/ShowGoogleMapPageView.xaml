@@ -12,15 +12,27 @@
             <RowDefinition Height="0.09*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        
-        <Button 
+
+        <StackPanel Orientation="Horizontal">
+            <Button 
                 Content=" Back"
                 Width="100"
                 Margin="5"
                 Command="{Binding BackCommand}"/>
-
-            
+            <!--<ComboBox Name="MapType"
+                      Width="200"
+                      Margin="55,5,10,5">
+                <ComboBoxItem IsSelected="True" Content="roadmap"/>                
+                <ComboBoxItem Content="satellite"/>
+                <ComboBoxItem Content="hybrid"/>
+                <ComboBoxItem Content="terrain"/>
+            </ComboBox>
+            <Button 
+                Content="Apply"
+                Width="100"
+                Margin="5"
+                Click="AllpyMapType"/>-->
+        </StackPanel>
         <WebBrowser Grid.Row="1"
                     Name="myWeb"
                     ns:WebBrowserUtility.BindableSource="{Binding MapUri}"/>

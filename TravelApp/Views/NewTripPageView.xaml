@@ -189,7 +189,9 @@
 
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="{Binding CityName}"/>
+                            <Label FontSize="30" 
+                                   FontWeight="Bold" 
+                                   Content="{Binding CityName}"/>
                             <Label Content="{Binding Country}"/>                            
                             <Label Content="{Binding Currency}"/>
                             <Label Content="{Binding TimeZone}"/>
