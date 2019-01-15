@@ -183,6 +183,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Messages\AddNewTripMessage.cs" />
     <Compile Include="Migrations\201812261138400_InitialCreate.cs" />
     <Compile Include="Migrations\201812261138400_InitialCreate.Designer.cs">
       <DependentUpon>201812261138400_InitialCreate.cs</DependentUpon>
@@ -194,6 +195,14 @@
     <Compile Include="Migrations\201901090814450_Migration0901_2.cs" />
     <Compile Include="Migrations\201901090814450_Migration0901_2.Designer.cs">
       <DependentUpon>201901090814450_Migration0901_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901151051166_m1501.cs" />
+    <Compile Include="Migrations\201901151051166_m1501.Designer.cs">
+      <DependentUpon>201901151051166_m1501.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901151209237_mg1501.cs" />
+    <Compile Include="Migrations\201901151209237_mg1501.Designer.cs">
+      <DependentUpon>201901151209237_mg1501.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -310,6 +319,12 @@
     <EmbeddedResource Include="Migrations\201901090814450_Migration0901_2.resx">
       <DependentUpon>201901090814450_Migration0901_2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901151051166_m1501.resx">
+      <DependentUpon>201901151051166_m1501.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901151209237_mg1501.resx">
+      <DependentUpon>201901151209237_mg1501.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -346,8 +361,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

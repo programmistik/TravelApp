@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TravelApp.Messages;
 using TravelApp.Models;
 using TravelApp.Services;
 using TravelApp.Views;
@@ -95,6 +96,7 @@ namespace TravelApp.ViewModels
                 TicketList = new ObservableCollection<Ticket>();
                 ChkCollection = new ObservableCollection<CheckItem>();
                 PageTitle = "New trip";
+                CityName = Country = Currency = TimeZone = Mayor = "";
             }
             else if (ntr.Notification == "EditTrip")
             {
@@ -136,6 +138,10 @@ namespace TravelApp.ViewModels
                             var city = apiService.GetCity(CityToSearch);
                             if (String.IsNullOrEmpty(city.CityName) != true)
                             {
+                                if (String.IsNullOrEmpty(city.ImageUri))
+                                {
+                                    city.ImageUri = "G:\\no_image.jpg";
+                                }
                                 db.Cities.Add(city);
                                 db.SaveChanges();
                                 var record = new CityList();
@@ -185,8 +191,6 @@ namespace TravelApp.ViewModels
                 {
                     if (messageService.ShowYesNo("Are you sure?"))
                     {
-                        //db.Contacts.Remove(param);
-                        //db.SaveChanges();
                         TicketList.Remove(param);
                     }
                 }
@@ -276,10 +280,29 @@ namespace TravelApp.ViewModels
                     {                        
                         db.Trips.Add(CurrentTrip);
                         db.SaveChanges();
-                        Messenger.Default.Send(new NotificationMessage<Trip>(CurrentTrip, "AddNewTripToCollection"));
+                        Messenger.Default.Send(new NotificationMessage<AddNewTripMessage>(new AddNewTripMessage(CurrentTrip), "AddNewTripToCollection"));
                     }
                     else
                     {
+                        db.SaveChanges();
+                        // delete nulls if any
+                        var nullCity = db.CityLists.Where(c => c.TripId == null);
+                        foreach (var c in nullCity)
+                        {
+                            db.CityLists.Remove(c);
+                        }
+
+                        var nullTicket = db.Tickets.Where(c => c.TripId == null);
+                        foreach (var c in nullTicket)
+                        {
+                            db.Tickets.Remove(c);
+                        }
+
+                        var nullCheck = db.CheckLists.Where(c => c.TripId == null);
+                        foreach (var c in nullCheck)
+                        {
+                            db.CheckLists.Remove(c);
+                        }
                         db.SaveChanges();
                     }
                     navigationService.Navigate<MainPageView>();
@@ -293,6 +316,7 @@ namespace TravelApp.ViewModels
             get => backCommand ?? (backCommand = new RelayCommand(
                 () =>
                 {
+                    Messenger.Default.Send(new NotificationMessage<AddNewTripMessage>(new AddNewTripMessage(CurrentTrip), "RefreshCollection"));
                     navigationService.Navigate<MainPageView>();
                 }
             ));

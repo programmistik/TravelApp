@@ -20,5 +20,28 @@ namespace TravelApp.Models
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<CityList> CityLists { get; set; }
         public DbSet<CheckItem> CheckLists { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CityList>()
+               .HasOptional(j => j.Trip)
+               .WithMany(x => x.CityList)
+
+               .WillCascadeOnDelete(true);
+
+            //modelBuilder.Entity<Trip>()
+            //   .HasOptional(j => j.Tickets)
+            //   .WithMany()
+
+            //   .WillCascadeOnDelete(true);
+
+            //modelBuilder.Entity<Trip>()
+            //   .HasOptional(j => j.CheckItems)
+            //   .WithMany()
+
+            //   .WillCascadeOnDelete(true);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

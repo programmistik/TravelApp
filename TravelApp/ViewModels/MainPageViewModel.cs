@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using TravelApp.Messages;
 using TravelApp.Models;
 using TravelApp.Services;
 using TravelApp.Views;
@@ -34,12 +35,16 @@ namespace TravelApp.ViewModels
 
             Messenger.Default.Register<NotificationMessage<User>>(this, OnHitIt);
 
+            Messenger.Default.Register<NotificationMessage<AddNewTripMessage>>(this, OnHitMsg);
 
-            Messenger.Default.Register<NotificationMessage<Trip>>(this, a =>
-            {
-                if (a.Notification == "AddNewTripToCollection")
-                    TripList.Add(a.Content);
-            });
+
+        }
+        private void OnHitMsg(NotificationMessage<AddNewTripMessage> a)
+        {
+            if (a.Notification == "AddNewTripToCollection")
+                TripList.Add(a.Content.NewTrip);
+            else if (a.Notification == "RefreshCollection")
+                TripList = new ObservableCollection<Trip>(db.Trips.Where(tr => tr.UserId == CurrentUserId));
         }
 
         private void OnHitIt(NotificationMessage<User> usr)
@@ -73,7 +78,6 @@ namespace TravelApp.ViewModels
             get => deleteTripCommand ?? (deleteTripCommand = new RelayCommand<Trip>(
                 param =>
                 {
-                   // TripList.Remove(param);
                     db.Trips.Remove(param);
                    
                     db.SaveChanges();
