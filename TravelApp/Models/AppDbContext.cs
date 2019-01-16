@@ -26,20 +26,17 @@ namespace TravelApp.Models
             modelBuilder.Entity<CityList>()
                .HasOptional(j => j.Trip)
                .WithMany(x => x.CityList)
-
                .WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<Trip>()
-            //   .HasOptional(j => j.Tickets)
-            //   .WithMany()
+            modelBuilder.Entity<Ticket>()
+               .HasOptional(j => j.Trip)
+               .WithMany(x => x.Tickets)
+               .WillCascadeOnDelete(true);
 
-            //   .WillCascadeOnDelete(true);
-
-            //modelBuilder.Entity<Trip>()
-            //   .HasOptional(j => j.CheckItems)
-            //   .WithMany()
-
-            //   .WillCascadeOnDelete(true);
+            modelBuilder.Entity<CheckItem>()
+               .HasOptional(j => j.Trip)
+               .WithMany(x => x.CheckItems)
+               .WillCascadeOnDelete(true);
 
             base.OnModelCreating(modelBuilder);
         }

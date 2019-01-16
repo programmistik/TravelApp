@@ -15,7 +15,6 @@ namespace TravelApp.Models
         public virtual City City { get; set; }
         
         public int? TripId { get; set; }
-        //[ForeignKey("TripId")]
         public virtual Trip Trip { get; set; }
     }
 }

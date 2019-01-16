@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201901151209237_mg1501.Designer.cs">
       <DependentUpon>201901151209237_mg1501.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901160520551_mg1601.cs" />
+    <Compile Include="Migrations\201901160520551_mg1601.Designer.cs">
+      <DependentUpon>201901160520551_mg1601.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\CheckItems.cs" />
@@ -325,6 +329,9 @@
     <EmbeddedResource Include="Migrations\201901151209237_mg1501.resx">
       <DependentUpon>201901151209237_mg1501.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901160520551_mg1601.resx">
+      <DependentUpon>201901160520551_mg1601.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -345,6 +352,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyMap.html" />
+    <Resource Include="no_image.jpg" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

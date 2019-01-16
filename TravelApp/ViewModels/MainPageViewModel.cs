@@ -78,9 +78,13 @@ namespace TravelApp.ViewModels
             get => deleteTripCommand ?? (deleteTripCommand = new RelayCommand<Trip>(
                 param =>
                 {
-                    db.Trips.Remove(param);
-                   
-                    db.SaveChanges();
+                    if (messageService.ShowYesNo("Are you sure?"))
+                    {
+                        TripList.Remove(param);
+                        db.Trips.Remove(param);
+
+                        db.SaveChanges();
+                    }
                 }
             ));
         }

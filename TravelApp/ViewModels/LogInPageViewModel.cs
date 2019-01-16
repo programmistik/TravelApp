@@ -52,6 +52,7 @@ namespace TravelApp.ViewModels
             get => signUpCommand ?? (signUpCommand = new RelayCommand(
                 () =>
                 {
+                    LoginUserName = LoginCheck = "";
                     navigationService.Navigate<SignUpPageView>();
                 }
             ));
@@ -88,9 +89,6 @@ namespace TravelApp.ViewModels
                                 if (hashValueFromDB.Equals(hashToCompare))
                                 {
                                     var Usr = qwr.Single();
-                                    // messageService.ShowInfo("OK");
-                                    //var Usr = new SendCurrentUser();
-                                    //Usr.UserId = qwr.Single().Id;
                                     Messenger.Default.Send(new NotificationMessage<User>(Usr,"SendCurrentUser"));
                                     navigationService.Navigate<MainPageView>();
                                 }

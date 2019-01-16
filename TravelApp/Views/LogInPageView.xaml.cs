@@ -28,5 +28,10 @@ namespace TravelApp.Views
         }
 
         public SecureString GetPassword { get => pBox.SecurePassword; }
+
+        public bool ConfirmPassword()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

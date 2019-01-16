@@ -13,9 +13,8 @@ namespace TravelApp.Models
         public int Id { get; set; }
         public string TicketName { get; set; }
         public string TicketUri { get; set; }
-       // [Key, ForeignKey("Trip")]
+
         public int? TripId { get; set; }
-       // [ForeignKey("TripId")]
         public virtual Trip Trip { get; set; }
     }
 }

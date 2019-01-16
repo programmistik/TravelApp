@@ -44,6 +44,18 @@ namespace TravelApp.ViewModels
         private User user = new User();
         public User User { get => user; set => Set(ref user, value); }
 
+        private string msg;
+        public string Msg { get => msg; set => Set(ref msg, value); }
+
+        private string msgColor;
+        public string MsgColor { get => msgColor; set => Set(ref msgColor, value); }
+
+        private string passCheckError;
+        public string PassCheckError { get => passCheckError; set => Set(ref passCheckError, value); }
+
+        private bool passwordConfirmation;
+        public bool PasswordConfirmation { get => passwordConfirmation; set => Set(ref passwordConfirmation, value); }
+
 
         public SignUpPageViewModel(INavigationService navigationService, 
                                    IMessageService messageService, 
@@ -59,14 +71,6 @@ namespace TravelApp.ViewModels
 
             VideoDevices = new ObservableCollection<FilterInfo>();
             GetVideoDevices();
-            //if (CurrentDevice != null)
-            //{
-            //    videoSource = new VideoCaptureDevice(CurrentDevice.MonikerString);
-            //    videoSource.NewFrame += video_NewFrame;
-            //    videoSource.Start();
-            //}
-            //else
-               // System.Windows.MessageBox.Show("Current device can't be null");
 
         }
         public void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -90,7 +94,6 @@ namespace TravelApp.ViewModels
             }
             catch (Exception)
             {
-              //  System.Windows.MessageBox.Show("Error on:\n" + exc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 StopCamera();
             }
         }
@@ -113,8 +116,6 @@ namespace TravelApp.ViewModels
 
             if (VideoDevices.Any())
                 CurrentDevice = VideoDevices[0];
-           // else
-               // System.Windows.MessageBox.Show("No webcam found");
         }
         public void Dispose()
         {
@@ -134,14 +135,11 @@ namespace TravelApp.ViewModels
                     encoder.Frames.Add(BitmapFrame.Create(Image));
                     ImageLink = Environment.CurrentDirectory+"\\snap.png";
                     using (var fileStream = new FileStream(ImageLink, FileMode.Create))
-                    //var FileName = "G:\\Snapshot.png";
-                    //using (var fileStream = new FileStream(FileName, FileMode.Create))
                     {
                         encoder.Save(fileStream);
                     }
                     StopCamera();
                     Image = new BitmapImage(new Uri(ImageLink));
-                    //   navigationService.Navigate<SignUpPageView>();
                 }
             ));
         }
@@ -167,6 +165,8 @@ namespace TravelApp.ViewModels
                 () =>
                 {
                     // do nothing
+                    MsgColor = Msg = PassCheckError = "";
+                    User = new User();
                     StopCamera();
                     navigationService.Navigate<LogInPageView>();
                 }
@@ -181,46 +181,102 @@ namespace TravelApp.ViewModels
                 param =>
                 {
                     // check login unique
+                    if (string.IsNullOrEmpty(User.Login))
+                        messageService.ShowError("Enter username!", "Sing up failed");
+                    else
+                    {
+                        if (MsgColor == "Red")
+                        {
+                            messageService.ShowError("Please, choose another username!\nThis one is already taken.","Sing up failed");
+                        }
+                        else
+                        {
+                            if (!PasswordConfirmation)
+                            {
+                                messageService.ShowError("Please, confirm your password!", "Sing up failed");
+                            }
+                            else // OK!
+                            {
+                                var passwordContainer = param as IPasswordSupplier;
+                                if (passwordContainer != null)
+                                {
+                                    var sPass = passwordContainer.GetPassword;
+                                    RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
+                                    byte[] salt = new byte[32];
+                                    csprng.GetBytes(salt);
+                                    var saltValue = Convert.ToBase64String(salt);
 
+                                    byte[] saltedPassword = Encoding.UTF8.GetBytes(saltValue + new NetworkCredential(string.Empty, sPass).Password);
+                                    SHA256Managed hashstring = new SHA256Managed();
+                                    byte[] hash = hashstring.ComputeHash(saltedPassword);
+                                    saltValue = Convert.ToBase64String(salt);
+                                    var hashValue = Convert.ToBase64String(hash);
+                                    User.SaltValue = saltValue;
+                                    User.HashValue = hashValue;
+                                    User.Photo = ImageLink;
+                                    db.Users.Add(User);
+                                    db.SaveChanges();
+                                }
+                                MsgColor = Msg = PassCheckError = "";
+                                User = new User();
+                                StopCamera();
+                                navigationService.Navigate<LogInPageView>();
+                            }
+                        }
+                    }
+
+                    
+                }
+            ));
+        }
+        private RelayCommand<string> lostFocusCommand_tbUN;
+        public RelayCommand<string> LostFocusCommand_tbUN
+        {
+            get => lostFocusCommand_tbUN ?? (lostFocusCommand_tbUN = new RelayCommand<string>(
+                param =>
+                {
+                    if (!string.IsNullOrEmpty(param))
+                    {
+                        var qwr = db.Users.Where(u => u.Login == param);
+                        if (qwr.Any() == true)
+                        {
+                            MsgColor = "Red";
+                            Msg = "This username is already taken";
+                        }
+                        else
+                        {
+                            MsgColor = "Green";
+                            Msg = "You can use this username";
+                        }
+                    }
+                }
+            ));
+        }
+
+        private RelayCommand<object> lostFocusCommand_pBox;
+        public RelayCommand<object> LostFocusCommand_pBox
+        {
+            get => lostFocusCommand_pBox ?? (lostFocusCommand_pBox = new RelayCommand<object>(
+                param =>
+                {
                     var passwordContainer = param as IPasswordSupplier;
                     if (passwordContainer != null)
                     {
-                        var sPass = passwordContainer.GetPassword;
-                        RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
-                        byte[] salt = new byte[32];
-                        csprng.GetBytes(salt);
-                        var saltValue = Convert.ToBase64String(salt);
-
-                        byte[] saltedPassword = Encoding.UTF8.GetBytes(saltValue + new NetworkCredential(string.Empty, sPass).Password);
-                        SHA256Managed hashstring = new SHA256Managed();
-                        byte[] hash = hashstring.ComputeHash(saltedPassword);
-                        saltValue = Convert.ToBase64String(salt);
-                        var hashValue = Convert.ToBase64String(hash);
-                        User.SaltValue = saltValue;
-                        User.HashValue = hashValue;
-                        User.Photo = ImageLink;
-                        db.Users.Add(User);
-                        db.SaveChanges();
+                        var chk = passwordContainer.ConfirmPassword();
+                        if (chk)
+                        {
+                            PassCheckError = "";
+                            PasswordConfirmation = true;
+                        }
+                        else
+                        {
+                            PassCheckError = "Passwords don't match";
+                            PasswordConfirmation = false;
+                        }
                     }
-
-                    StopCamera();
-                    navigationService.Navigate<LogInPageView>();
                 }
             ));
         }
-        private RelayCommand<object> lostFocusCommand;
-        public RelayCommand<object> LostFocusCommand
-        {
-            get => lostFocusCommand ?? (lostFocusCommand = new RelayCommand<object>(
-                param =>
-                {
-                   
-
-                }
-            ));
-        }
-
-        
 
 
 

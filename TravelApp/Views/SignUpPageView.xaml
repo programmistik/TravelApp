@@ -50,37 +50,49 @@
                      Width="500"
                      FontSize="20"
                      Text="{Binding User.Login, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}">
-                
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="LostFocus">
+                        <b:InvokeCommandAction  Command="{Binding LostFocusCommand_tbUN}" CommandParameter="{Binding Text, ElementName=tbUN}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
             </TextBox>
-            <Label Content="{Binding (Validation.Errors)[0].ErrorContent, ElementName=tbUN}" Foreground="Red" FontSize="20"></Label>
+            <Label Content="{Binding Msg}" 
+                   Foreground="{Binding MsgColor}" 
+                   Margin="20,0,0,0"
+                   FontSize="20"></Label>
 
-            <Label Margin="20,20,0,0" 
+            <Label Margin="20,0,0,0" 
                Content="Password:"
                FontSize="15"/>
             <PasswordBox Name="pBox" 
                          Margin="20,2,20,0"
-                         FontSize="20"
-                         
-                         />
-            <Label Margin="20,20,0,0" 
+                         FontSize="20">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="LostFocus">
+                        <b:InvokeCommandAction  Command="{Binding LostFocusCommand_pBox}" CommandParameter="{Binding ElementName=This}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </PasswordBox>
+            <Label Margin="20,0,0,0" 
                Content="Confirm password:"
                FontSize="15"/>
             <PasswordBox Name="pBox2"
                          Margin="20,2,20,0"
-                         FontSize="20"
-                         >
-                
+                         FontSize="20">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="LostFocus">
+                        <b:InvokeCommandAction  Command="{Binding LostFocusCommand_pBox}" CommandParameter="{Binding ElementName=This}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
             </PasswordBox>
-            
-            <TextBlock x:Name="_PassCheckError" 
-                       Grid.ColumnSpan="2" 
+            <Label x:Name="PassCheckError"                       
                        Grid.Row="3" 
-                       Margin="5,5,5,5"                       
+                       Margin="20,5,5,5"                       
                        Foreground="Red"
-                       HorizontalAlignment="Center" >
+                       Content="{Binding PassCheckError}">
                 
-            </TextBlock>
-            <Label Margin="20,20,0,0" 
+            </Label>
+            <Label Margin="20,0,0,0" 
                Content="E-mail:"
                FontSize="15"/>
             <TextBox Margin="20,2,20,0"

@@ -13,7 +13,6 @@ namespace TravelApp.Models
         public int Id { get; set; }
         public string TripName { get; set; }
 
-       // [Key, ForeignKey("User")]        
         public int UserId { get; set; }
         public virtual User User { get; set; }
 

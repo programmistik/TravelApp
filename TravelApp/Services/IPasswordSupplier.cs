@@ -10,5 +10,6 @@ namespace TravelApp.Services
     public interface IPasswordSupplier
     {
         SecureString GetPassword { get; }
+        bool ConfirmPassword();
     }
 }

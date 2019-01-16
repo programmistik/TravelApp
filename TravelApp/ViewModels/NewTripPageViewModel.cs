@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -140,7 +141,7 @@ namespace TravelApp.ViewModels
                             {
                                 if (String.IsNullOrEmpty(city.ImageUri))
                                 {
-                                    city.ImageUri = "G:\\no_image.jpg";
+                                    city.ImageUri = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + "\\no_image.jpg";
                                 }
                                 db.Cities.Add(city);
                                 db.SaveChanges();
@@ -269,43 +270,50 @@ namespace TravelApp.ViewModels
             get => okCommand ?? (okCommand = new RelayCommand(
                 () =>
                 {
-                    // save all in db
-                    CurrentTrip.TripName = TripName;
-                    CurrentTrip.ArrivalDate = ArrivalDate;
-                    CurrentTrip.DepartureDate = DepartureDate;
-                    CurrentTrip.CityList = new ObservableCollection<CityList>(CityCollection);
-                    CurrentTrip.Tickets = new ObservableCollection<Ticket>(TicketList);
-                    CurrentTrip.CheckItems = new ObservableCollection<CheckItem>(ChkCollection);
-                    if (AddNew)
-                    {                        
-                        db.Trips.Add(CurrentTrip);
-                        db.SaveChanges();
-                        Messenger.Default.Send(new NotificationMessage<AddNewTripMessage>(new AddNewTripMessage(CurrentTrip), "AddNewTripToCollection"));
+                    if (string.IsNullOrEmpty(TripName))
+                    {
+                        messageService.ShowError("Please, enter Trip name.");
                     }
                     else
                     {
-                        db.SaveChanges();
-                        // delete nulls if any
-                        var nullCity = db.CityLists.Where(c => c.TripId == null);
-                        foreach (var c in nullCity)
+                        // save all in db
+                        CurrentTrip.TripName = TripName;
+                        CurrentTrip.ArrivalDate = ArrivalDate;
+                        CurrentTrip.DepartureDate = DepartureDate;
+                        CurrentTrip.CityList = new ObservableCollection<CityList>(CityCollection);
+                        CurrentTrip.Tickets = new ObservableCollection<Ticket>(TicketList);
+                        CurrentTrip.CheckItems = new ObservableCollection<CheckItem>(ChkCollection);
+                        if (AddNew)
                         {
-                            db.CityLists.Remove(c);
+                            db.Trips.Add(CurrentTrip);
+                            db.SaveChanges();
+                            Messenger.Default.Send(new NotificationMessage<AddNewTripMessage>(new AddNewTripMessage(CurrentTrip), "AddNewTripToCollection"));
                         }
+                        else
+                        {
+                            db.SaveChanges();
+                            // delete nulls if any
+                            var nullCity = db.CityLists.Where(c => c.TripId == null);
+                            foreach (var c in nullCity)
+                            {
+                                db.CityLists.Remove(c);
+                            }
 
-                        var nullTicket = db.Tickets.Where(c => c.TripId == null);
-                        foreach (var c in nullTicket)
-                        {
-                            db.Tickets.Remove(c);
-                        }
+                            var nullTicket = db.Tickets.Where(c => c.TripId == null);
+                            foreach (var c in nullTicket)
+                            {
+                                db.Tickets.Remove(c);
+                            }
 
-                        var nullCheck = db.CheckLists.Where(c => c.TripId == null);
-                        foreach (var c in nullCheck)
-                        {
-                            db.CheckLists.Remove(c);
+                            var nullCheck = db.CheckLists.Where(c => c.TripId == null);
+                            foreach (var c in nullCheck)
+                            {
+                                db.CheckLists.Remove(c);
+                            }
+                            db.SaveChanges();
                         }
-                        db.SaveChanges();
+                        navigationService.Navigate<MainPageView>();
                     }
-                    navigationService.Navigate<MainPageView>();
                 }
             ));
         }
